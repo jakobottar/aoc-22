@@ -20,30 +20,34 @@ def get_rps_score(you, opponent) -> int:
         "Y": "paper",
         "Z": "scissors",
     }
+    you, opponent = rps_key[you], rps_key[opponent]
 
-    if rps_key[you] == rps_key[opponent]:
+    if you == opponent:
         return 3  # score for draw
-    if rps_key[you] == "rock":
-        if rps_key[opponent] == "scissors":
-            return 6  # score for win
-        return 0  # loss, opponent == paper
-    if rps_key[you] == "paper":
-        if rps_key[opponent] == "rock":
-            return 6  # score for win
-        return 0  # loss, opponent == scissors
-    else:  # you == scissors
-        if rps_key[opponent] == "paper":
-            return 6  # score for win
-        return 0  # loss, opponent == rock
+
+    match you:
+        case "rock":
+            if opponent == "scissors":
+                return 6  # win
+            return 0  # loss
+        case "paper":
+            if opponent == "rock":
+                return 6  # win
+            return 0  # loss
+        case "scissors":
+            if opponent == "paper":
+                return 6  # win
+            return 0  # loss
 
 
-def get_shape_score(opponent, outcome) -> int:
+def get_shape_score(outcome, opponent) -> int:
 
     opponent_key = {
         "A": "rock",
         "B": "paper",
         "C": "scissors",
     }
+    opponent = opponent_key[opponent]
 
     your_key = {
         "rock": 1,
@@ -51,20 +55,21 @@ def get_shape_score(opponent, outcome) -> int:
         "scissors": 3,
     }
 
-    if outcome == "X":  # lose
-        if opponent_key[opponent] == "rock":
-            return your_key["scissors"]
-        if opponent_key[opponent] == "paper":
-            return your_key["rock"]
-        return your_key["paper"]  # opponent == scissors
-    if outcome == "Y":  # draw
-        return your_key[opponent_key[opponent]]
-    if outcome == "Z":  # win
-        if opponent_key[opponent] == "rock":
-            return your_key["paper"]
-        if opponent_key[opponent] == "paper":
-            return your_key["scissors"]
-        return your_key["rock"]  # opponent == scissors
+    match outcome:
+        case "X":  # lose
+            if opponent == "rock":
+                return your_key["scissors"]
+            if opponent == "paper":
+                return your_key["rock"]
+            return your_key["paper"]  # opponent == scissors
+        case "Y":
+            return your_key[opponent]
+        case "Z":
+            if opponent == "rock":
+                return your_key["paper"]
+            if opponent == "paper":
+                return your_key["scissors"]
+            return your_key["rock"]  # opponent == scissors
 
 
 # read lines from file
@@ -98,7 +103,7 @@ scoring_dict_2 = {
 total_score = 0
 for line in lines:
     line = line.strip().split(" ")
-    total_score += scoring_dict_2[line[1]] + get_shape_score(line[0], line[1])
+    total_score += get_shape_score(line[1], line[0]) + scoring_dict_2[line[1]]
 
 print_bold("part 2:")
 print(f"total score: {total_score}")
