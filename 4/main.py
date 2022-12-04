@@ -18,19 +18,19 @@ def get_range(assignment):
 def is_fully_overlapping(line):
     # create sets
     pair = [a.split("-") for a in line.split(",")]
-    pair = list(map(get_range, pair))
+    first, second = list(map(get_range, pair))
 
     # get intersection
-    return pair[0] & pair[1] in (pair[0], pair[1])
+    return first & second in (first, second)
 
 
 def is_overlapping(line):
     # create sets
     pair = [a.split("-") for a in line.split(",")]
-    pair = list(map(get_range, pair))
+    first, second = list(map(get_range, pair))
 
     # get intersection
-    return len(pair[0] & pair[1]) != 0
+    return len(first & second) != 0
 
 
 with open(FILENAME, encoding="utf-8") as f:
@@ -39,7 +39,7 @@ lines = [line.strip() for line in lines]
 
 # part 1
 print_bold("part 1:")
-print(f"number overlapping: {sum(list(map(is_fully_overlapping, lines)))}")
+print(f"number fully overlapping: {sum(list(map(is_fully_overlapping, lines)))}")
 
 # part 2
 print_bold("part 2:")
