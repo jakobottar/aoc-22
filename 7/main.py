@@ -31,11 +31,12 @@ class Node:
         # if we can't find the child,
         raise ValueError(f"cannot find child {name}")
 
-    def update_size(self) -> int:
+    def get_size(self) -> int:
+        actual_size = self.size
         for child in self.children:
-            self.size += child.update_size()
+            actual_size += child.get_size()
 
-        return self.size
+        return actual_size
 
     def print(self, spacer=""):
         print(spacer, f"{self.name} - {self.size}")
@@ -50,18 +51,20 @@ def count_num_below(node):
         count += c_count
         total_size += c_total
 
-    if node.size < 100000:
+    node_size = node.get_size()
+    if node_size < 100000:
         count += 1
-        total_size += node.size
+        total_size += node_size
 
     return count, total_size
 
 
 def size_of_dir_to_rm(node):
-    if node.size < (UPDATE_SIZE - FREE_SPACE):
+    node_size = node.get_size()
+    if node_size < (UPDATE_SIZE - FREE_SPACE):
         return FILESYSTEM_SIZE + 1
 
-    smallest_dir = node.size
+    smallest_dir = node_size
     for child in node.children:
         c_smallest = size_of_dir_to_rm(child)
         smallest_dir = min(c_smallest, smallest_dir)
@@ -97,8 +100,6 @@ for line in lines[1:]:
         else:
             curr_node.size += int(line[0])
 
-# update folder sizes with children's info
-root.update_size()
 
 # traverse tree and count
 print(bold("part 1:"))
