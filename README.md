@@ -11,7 +11,7 @@ https://adventofcode.com/2022
 | [4](https://adventofcode.com/2022/day/4)   | :star: | :star: |
 | [5](https://adventofcode.com/2022/day/5)   | :star: | :star: |
 | [6](https://adventofcode.com/2022/day/6)   | :star: | :star: |
-| [7](https://adventofcode.com/2022/day/7)   |        |        |
+| [7](https://adventofcode.com/2022/day/7)   | :star: | :star: |
 | [8](https://adventofcode.com/2022/day/8)   |        |        |
 | [9](https://adventofcode.com/2022/day/9)   |        |        |
 | [10](https://adventofcode.com/2022/day/10) |        |        |
