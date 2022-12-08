@@ -12,7 +12,8 @@ def bold(value):
     return "\033[1m" + str(value) + "\033[0m"
 
 
-def is_visible(forest, row, col):
+def is_visible(forest, coords):
+    row, col = coords
     if row == 0 or col == 0:
         return True
     if row == len(forest) - 1 or col == len(forest[row]) - 1:
@@ -27,35 +28,25 @@ def is_visible(forest, row, col):
     return above < height or below < height or left < height or right < height
 
 
-def get_scenic_score(forest, row, col):
+def get_scenic_score(forest, coords):
+    row, col = coords
     height = forest[row, col]
 
     # TODO: there has to be a better way to do this...
-    above = 0
-    for r in range(row - 1, -1, -1):
-        above += 1
-        if forest[r, col] >= height:
-            break
+    score = 1
+    for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        count = 0
+        r, c = row + dx, col + dy
+        while 0 <= r < forest.shape[0] and 0 <= c < forest.shape[1]:
+            count += 1
+            if forest[r, c] < height:
+                r += dx
+                c += dy
+            else:
+                break
+        score *= count
 
-    below = 0
-    for r in range(row + 1, len(forest[row])):
-        below += 1
-        if forest[r, col] >= height:
-            break
-
-    left = 0
-    for c in range(col - 1, -1, -1):
-        left += 1
-        if forest[row, c] >= height:
-            break
-
-    right = 0
-    for c in range(col + 1, len(forest)):
-        right += 1
-        if forest[row, c] >= height:
-            break
-
-    return above * below * left * right
+    return score
 
 
 with open(FILENAME, encoding="utf-8") as f:
@@ -69,19 +60,12 @@ forest = np.array(forest)
 
 print(bold("part 1:"))
 
-count = 0
-for row, forest_row in enumerate(forest):
-    for col, _ in enumerate(forest_row):
-        count += int(is_visible(forest, row, col))
-
-print(f"found {bold(count)} visible trees")
+num_visible = sum(is_visible(forest, coords) for coords, _ in np.ndenumerate(forest))
+print(f"found {bold(num_visible)} visible trees")
 
 print(bold("part 2:"))
 
-max_score = -1
-for row, forest_row in enumerate(forest):
-    for col, _ in enumerate(forest_row):
-        max_score = max(get_scenic_score(forest, row, col), max_score)
-
-
+max_score = max(
+    get_scenic_score(forest, coords) for coords, _ in np.ndenumerate(forest)
+)
 print(f"max scenic score: {bold(max_score)}")
