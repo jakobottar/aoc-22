@@ -32,7 +32,6 @@ def get_scenic_score(forest, coords):
     row, col = coords
     height = forest[row, col]
 
-    # TODO: there has to be a better way to do this...
     score = 1
     for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
         count = 0
